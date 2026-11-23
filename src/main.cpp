@@ -25,18 +25,18 @@ int main(int argc, char* argv[]) {
     Vector2 windowSize = WINDOW_SIZE;
 
     if (fullscreen) {
-        windowSize.setX(sf::VideoMode::getDesktopMode().width);
-        windowSize.setY(sf::VideoMode::getDesktopMode().height);
+        windowSize.setX(sf::VideoMode::getDesktopMode().size.x);
+        windowSize.setY(sf::VideoMode::getDesktopMode().size.y);
     }
-    sf::VideoMode videoMode = { (unsigned int)windowSize.getX(), (unsigned int)windowSize.getY() };
-    auto flags = fullscreen ? sf::Style::Fullscreen : sf::Style::Titlebar | sf::Style::Close;
+    sf::VideoMode videoMode({ (unsigned int)windowSize.getX(), (unsigned int)windowSize.getY() });
+    auto style = sf::Style::Titlebar | sf::Style::Close;
+    auto state = fullscreen ? sf::State::Fullscreen : sf::State::Windowed;
 
-    sf::RenderWindow window(videoMode, WINDOW_TITLE, flags);
+    sf::RenderWindow window(videoMode, WINDOW_TITLE, style, state);
     window.setFramerateLimit(fps);
 
     sf::Image icon;
-    icon.loadFromFile("assets/icon.png");
-    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+    if (icon.loadFromFile("assets/icon.png")) window.setIcon(icon.getSize(), icon.getPixelsPtr());
 
     std::shared_ptr<Generation> generation;
     if (generationName == "prim") {
@@ -75,13 +75,12 @@ int main(int argc, char* argv[]) {
     Grid grid { generation, solve, speed, static_cast<float>(cellSize), windowSize };
 
     while (window.isOpen()) {
-        sf::Event event {};
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed ||
-                (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)))
+        while (const std::optional event = window.pollEvent()) {
+            if (event->is<sf::Event::Closed>() ||
+                (event->is<sf::Event::KeyPressed>() && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)))
                 window.close();
-            else if (event.type == sf::Event::MouseButtonPressed &&
-                     sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            else if (event->is<sf::Event::MouseButtonPressed>() &&
+                     sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
                 grid.generate();
         }
 

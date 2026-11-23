@@ -1,105 +1,105 @@
-<p align="center">
-	<img src="https://github.com/maxencebonamy/maxencebonamy/blob/main/assets/Maze_Generator_Solver.png" width="100%" alt="Maze Generator Solver">
-</p>
+# Maze Generator Solver
 
+A maze generator and solver, animated step by step.
 
-https://github.com/maxencebonamy/Maze-Generator-Solver/assets/66129931/737e48ca-167f-486c-b615-aed842bd9899
+The program builds a maze with the generation algorithm of your choice, then solves it with a search algorithm, drawing every step in a window. It is meant for anyone who wants to compare how these algorithms behave.
 
+## Table of contents
 
-<br>
+- [Maze Generator Solver](#maze-generator-solver)
+	- [Table of contents](#table-of-contents)
+	- [How it works](#how-it-works)
+	- [Tech stack](#tech-stack)
+	- [Repository structure](#repository-structure)
+	- [Prerequisites](#prerequisites)
+	- [Installation](#installation)
+	- [Running locally](#running-locally)
+		- [Command-line options](#command-line-options)
+	- [Useful scripts](#useful-scripts)
+	- [License](#license)
 
-<p align="center">
-	<img src="https://github.com/maxencebonamy/maxencebonamy/blob/main/assets/1_Description.png" width="100%" alt="Description">
-</p>
+## How it works
 
-This software is a mathematical simulation that generates a labyrinth and then solves it using an algorithm of your choice.
+1. **Setup**: the window size is 1600x900 pixels, or the desktop size in fullscreen mode. The grid has one cell per `--cell-size` pixels, all starting as walls.
+2. **Generation**: the selected algorithm carves the maze. Each frame runs `--speed` update steps. Available algorithms: `prim`, `kruskal`, `hunt-and-kill`, `depth-first` and `aldous-broder`.
+3. **Solving**: once the maze is complete, the solver runs with the same step rate. The only available solver is `breadth-first`; `none` skips this step.
+4. **Restart**: a left click starts a new generation. `Escape` or closing the window quits.
 
-### Generation algorithms:
+## Tech stack
 
-- **Prim:**
+| Layer | Technologies |
+| --- | --- |
+| Language | C++17 |
+| Graphics | SFML |
+| Command line | cxxopts |
+| Build | xmake |
 
-https://github.com/maxencebonamy/Maze-Generator-Solver/assets/66129931/3c587c9c-f1ef-437c-a89c-4dfb024f5ddd
+## Repository structure
 
-- **Kruskal:**
-
-https://github.com/maxencebonamy/Maze-Generator-Solver/assets/66129931/9ddc9dee-e26d-47c1-8a92-3693542ecfe7
-
-- **Hunt and Kill:**
-
-https://github.com/maxencebonamy/Maze-Generator-Solver/assets/66129931/c0bf3ad8-81cc-4605-bdd2-4fe986ff0288
-
-- **Depth First:**
-
-https://github.com/maxencebonamy/Maze-Generator-Solver/assets/66129931/84147269-55fc-43db-9293-204eb7dd9604
-
-- **Aldous-Broder:**
-
-https://github.com/maxencebonamy/Maze-Generator-Solver/assets/66129931/49ba1879-99e5-4498-81ad-85238e0eaac9
-
-### Solve algorithms:
-
-- **Breadth First:**
-
-https://github.com/maxencebonamy/Maze-Generator-Solver/assets/66129931/70233431-9955-42cf-936b-02394a019b03
-
-<br>
-
-<p align="center">
-	<img src="https://github.com/maxencebonamy/maxencebonamy/blob/main/assets/2_Get_Started.png" width="100%" alt="Get Started">
-</p>
-
-### Launch the software:
-
-1. Click on the <a href="https://github.com/maxencebonamy/Sand-Box/releases" target="_blank">Releases</a> button on the right and select the **latest version**.
-2. Download the **.zip** archive and extract the files.
-3. Run the **.exe** executable.
-
-### Compile:
-
-> [!NOTE]
-> *Prerequisites:*
-> - [x] *Git must be installed on your computer. If not, <a href="https://git-scm.com/downloads" target="_blank">click here.</a>*
-> - [x] *Xmake must be installed on your computer, if not, <a href="https://xmake.io/#/getting_started?id=installation" target="_blank">click here.</a>*
-<br>
-
-1. **Clone** the repository on your computer. To do this, open a terminal in the folder of your choice and run the following command:
 ```
-git clone https://github.com/maxencebonamy/Maze-Generator-Solver
+.
+├── assets/             Window icon
+├── src/
+│   ├── display/        Grid rendering and simulation loop
+│   ├── generation/     Maze generation algorithms
+│   ├── solve/          Maze solving algorithms
+│   ├── vector/         2D vector type
+│   ├── config.cpp      Window size, title and colors
+│   └── main.cpp        Argument parsing and window loop
+└── xmake.lua           Build configuration
 ```
 
-2. **Navigate** inside the folder you've just cloned with the following command:
-```
+Each algorithm has its own `.cpp` and `.hpp` pair, built on the `Generation` and `Solve` base classes. Adding an algorithm means adding a pair of files and registering the name in `src/main.cpp`.
+
+## Prerequisites
+
+- [Git](https://git-scm.com/downloads)
+- [xmake](https://xmake.io/#/getting_started?id=installation), which downloads SFML and cxxopts on the first build
+- A C++17 compiler
+
+## Installation
+
+```bash
+git clone git@github.com:maxencebonamy/Maze-Generator-Solver.git
 cd Maze-Generator-Solver
-```
-
-3. **Compile** the project with the following command:
-```
 xmake
 ```
 
-4. **Run** the executable with this command:
-```
+## Running locally
+
+```bash
 xmake run main --generation kruskal
 ```
-*This is an example, you can change the name of the generation algorithm and add other parameters. This is described in greater detail in the "Features" section.*
 
-<br>
+The program loads `assets/icon.png` from the working directory, so run it from the repository root.
 
-<p align="center">
-	<img src="https://github.com/maxencebonamy/maxencebonamy/blob/main/assets/3_Features.png" width="100%" alt="Features">
-</p>
+Example with a fullscreen window, the `hunt-and-kill` generator, no solving, a speed of 10, 120 frames per second and 10 pixel cells:
 
-### Parameters that can be passed on the command line:
-- **--generation** or **-g**: specify generation algorithm ("kruskal", "prim", "hunt-and-kill", "depth-first" or "aldous-broder").
-- **--solve** or **-s**: specify resolution algorithm (default "breadth-first" or "none" to avoid resolving the maze).
-- **--speed**: specify the speed of the algorithm (default 1).
-- **--fps** or **-f**: specify the number of images displayed per second (default 60, 0 for no limit).
-- **--fullscreen**: launch software in full screen mode.
-- **--cel-size** or **-c**: specify cell size in pixels (default 1).
-
-**Example:** the following command will launch the software in full screen mode, and generate a maze using the "hunt-and-kill" algorithm without solving it, with a speed of 10, 120 images displayed per second and a cell size of 10 pixels.
-```
-./Maze-Generator-Solver.exe -g hunt-and-kill -s none --speed 10 -f 120 --fullscreen -c 10
+```bash
+xmake run main -g hunt-and-kill -s none --speed 10 -f 120 --fullscreen -c 10
 ```
 
-https://github.com/maxencebonamy/Maze-Generator-Solver/assets/66129931/dfa95ba6-cc40-471c-9d0b-7c586b3929ac
+### Command-line options
+
+| Option | Description | Default |
+| --- | --- | --- |
+| `-g`, `--generation` | Generation algorithm: `prim`, `kruskal`, `hunt-and-kill`, `depth-first` or `aldous-broder` | `kruskal` |
+| `-s`, `--solve` | Solve algorithm: `breadth-first` or `none` | `breadth-first` |
+| `--speed` | Algorithm steps per frame | `1` |
+| `-c`, `--cell-size` | Cell size, in pixels | `25` |
+| `-f`, `--fps` | Frames per second, `0` for no limit | `60` |
+| `--fullscreen` | Run in fullscreen | disabled |
+
+## Useful scripts
+
+| Command | Effect |
+| --- | --- |
+| `xmake` | Build the project |
+| `xmake run main` | Run the program with default options |
+| `xmake f -m release` | Switch the build to release mode |
+| `xmake f -m debug` | Switch the build to debug mode |
+| `xmake clean` | Remove build outputs |
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).

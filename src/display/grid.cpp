@@ -5,19 +5,20 @@ Grid::Grid(std::shared_ptr<Generation> generation, std::shared_ptr<Solve> solve,
     _generation(std::move(generation)),
     _solve(std::move(solve)),
     _speed(speed),
-    _cellSize(cellSize)
+    _cellSize(cellSize),
+    _sprite(_texture)
 {
     _size = windowSize / _cellSize + Vector2::one();
     const int WIDTH { static_cast<int>(_size.getX()) },
               HEIGHT { static_cast<int>(_size.getY()) };
 
-    _texture.create(WIDTH, HEIGHT);
+    (void)_texture.resize({static_cast<unsigned int>(WIDTH), static_cast<unsigned int>(HEIGHT)});
     for (int i { 0 }; i < WIDTH * HEIGHT * 4; ++i) _pixels.push_back(255);
     _texture.update(_pixels.data());
 
     _sprite.setTexture(_texture);
-    _sprite.setScale(_cellSize, _cellSize);
-    _sprite.setPosition(static_cast<int>(-_cellSize / 2), static_cast<int>(-_cellSize / 2));
+    _sprite.setScale({_cellSize, _cellSize});
+    _sprite.setPosition({static_cast<float>(static_cast<int>(-_cellSize / 2)), static_cast<float>(static_cast<int>(-_cellSize / 2))});
 
     _map = std::make_shared<Map>();
     for (int i { 0 }; i < WIDTH; ++i) {
@@ -43,7 +44,7 @@ void Grid::updateSimulation() {
         }
     }
 
-    sf::Uint8* ptr { _pixels.data() };
+    std::uint8_t* ptr { _pixels.data() };
 
     for (int j { 0 }; j < static_cast<int>(_size.getY()); ++j) {
         for (int i { 0 }; i < static_cast<int>(_size.getX()); ++i) {

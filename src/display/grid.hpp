@@ -3,6 +3,7 @@
 #include "config.hpp"
 
 #include <memory>
+#include <cstdint>
 
 
 class Grid {
@@ -34,7 +35,7 @@ private:
     Vector2 _size = Vector2();
 
     sf::Texture _texture;
-    std::vector<sf::Uint8> _pixels;
+    std::vector<std::uint8_t> _pixels;
     sf::Sprite _sprite;
 
     std::vector<std::vector<float>> _densityField;
