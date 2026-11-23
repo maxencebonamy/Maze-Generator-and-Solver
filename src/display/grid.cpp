@@ -16,7 +16,7 @@ Grid::Grid(std::shared_ptr<Generation> generation, std::shared_ptr<Solve> solve,
     for (int i { 0 }; i < WIDTH * HEIGHT * 4; ++i) _pixels.push_back(255);
     _texture.update(_pixels.data());
 
-    _sprite.setTexture(_texture);
+    _sprite.setTexture(_texture, true);
     _sprite.setScale({_cellSize, _cellSize});
     _sprite.setPosition({static_cast<float>(static_cast<int>(-_cellSize / 2)), static_cast<float>(static_cast<int>(-_cellSize / 2))});
 

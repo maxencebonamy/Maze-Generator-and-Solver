@@ -1,4 +1,4 @@
-# Maze Generator Solver
+# Maze Generator and Solver
 
 A maze generator and solver, animated step by step.
 
@@ -6,7 +6,7 @@ The program builds a maze with the generation algorithm of your choice, then sol
 
 ## Table of contents
 
-- [Maze Generator Solver](#maze-generator-solver)
+- [Maze Generator and Solver](#maze-generator-and-solver)
 	- [Table of contents](#table-of-contents)
 	- [How it works](#how-it-works)
 	- [Tech stack](#tech-stack)
